@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'checkstyle'
+    id 'com.diffplug.spotless' version '8.6.0'
+}
+
+group = 'org.cpsc2150'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'cpsc2150.connect4.views.Connect4App'
+}
+
+tasks.named('run', JavaExec) {
+    standardInput = System.in
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = '12.2.0'
+    configFile = file('config/checkstyle/checkstyle.xml')
+
+    // Fail the build when style violations are found.
+    ignoreFailures = false
+
+    // Treat Checkstyle warnings seriously.
+    maxWarnings = 0
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.withType(Javadoc).configureEach {
+    // P1 contracts include explicitly declared private methods and nested types.
+    options.showFromPrivate()
+    options.tags = [
+            'pre:a:Precondition:',
+            'post:a:Postcondition:'
+    ]
+}
+
+// Apply the required Java formatting and cleanup with ./gradlew spotlessApply.
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat('1.29.0')
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
