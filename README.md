@@ -13,6 +13,7 @@ but they are ultimately two entirely different tools.
 | `checkstyleTest` | Checks test Java files against `checkstyle.xml`                                    | No                   | Checkstyle |
 | `check`          | Runs the project's verification tasks, including formatting, Checkstyle, and tests | No                   | Gradle     |
 
+(g-j-f == "google-java-format", the IntelliJ plugin). Checkstyle is also a plugin if that wasn't clear from lecture.
 
 They all have different jobs, and, when run in order + some light manual fixing, it's very quick to
 get the repo in a state where at least style won't cause the build to fail.
@@ -24,9 +25,9 @@ get the repo in a state where at least style won't cause the build to fail.
    2. spotlessJavaCheck
 2. First thing I'd do is check the checkstyle report. We currently have 77 violations.
 3. Since our checkstyle guide is very similar to what google-java-format is using, we can fix most of this with spotless
-4. I'll run `spotlessApply` first. We can run spotlessCheck (or spotlessJavaCheck, since we're only working with non-test files right now) to confirm that g-j-c did its job
+4. I'll run `spotlessApply` first. We can run spotlessCheck (or spotlessJavaCheck, since we're only working with non-test files right now) to confirm that g-j-f did its job
 5. I'll then run `checkstyleMain` (in the `other` group in the gradle tool window) to confirm what we're working with now.
-6. g-j-c only left 1 checkstyle problem behind, and it's parameter names in this instance, since that's not something the formatter is willing to touch because who's to say what is the "right" parameter name
+6. g-j-f only left 1 checkstyle problem behind, and it's parameter names in this instance, since that's not something the formatter is willing to touch because who's to say what is the "right" parameter name
    1. this means it gets left for humans to go in and fix based on linter feedback
 7. I'll manually fix whatever's left and run `checkstyleMain` again. In this case, if you've never seen regular expressions, the issue is that parameter names should also be camelCased, to which 'X' is not
    1. requiring it to be longer than 1 char is something that can be adjusted too with this expression added to checkstyle.xml "^[a-z][a-zA-Z0-9]+$"
